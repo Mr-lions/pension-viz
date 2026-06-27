@@ -20,7 +20,7 @@
   });
   function safePlot(id,traces,layout){
     const el=document.getElementById(id); if(!el || !window.Plotly) return;
-    Plotly.newPlot(el,traces,layout,plotConfig).then(()=>charts.set(id,el));
+    return Plotly.newPlot(el,traces,layout,plotConfig).then(()=>{charts.set(id,el);return el});
   }
   function toast(msg){const el=$('#toast');el.textContent=msg;el.classList.add('show');clearTimeout(toast.t);toast.t=setTimeout(()=>el.classList.remove('show'),1800)}
   function animateNumber(el,target,duration=1800,decimals=0){
@@ -34,6 +34,19 @@
     const numObs=new IntersectionObserver(entries=>entries.forEach(e=>{if(e.isIntersecting){const el=e.target;animateNumber(el,parseFloat(el.dataset.target),1800,parseInt(el.dataset.decimals||'0'));numObs.unobserve(el)}}),{threshold:.7});
     $$('.roll-number').forEach(el=>numObs.observe(el));
   }
+  function initHeroQuestions(){
+    const questions=$('.hero-intro .hero-questions');
+    if(!questions)return;
+    questions.classList.add('questions-enter');
+    const show=()=>questions.classList.add('visible');
+    if(matchMedia('(prefers-reduced-motion: reduce)').matches){show();return}
+    const obs=new IntersectionObserver(entries=>entries.forEach(entry=>{
+      if(!entry.isIntersecting)return;
+      show();
+      obs.disconnect();
+    }),{threshold:.35});
+    obs.observe(questions);
+  }
   function initScrollUI(){
     const progress=$('#scrollProgress');const dots=$$('.chapter-dots a');const sections=dots.map(a=>document.querySelector(a.getAttribute('href')));
     const update=()=>{const h=document.documentElement.scrollHeight-innerHeight;progress.style.width=`${Math.max(0,Math.min(100,scrollY/h*100))}%`;let active=0;sections.forEach((s,i)=>{if(s && s.getBoundingClientRect().top<innerHeight*.48)active=i});dots.forEach((d,i)=>d.classList.toggle('active',i===active))};
@@ -44,11 +57,45 @@
 
   function initPopulation(){
     const p=D.population;
-    const traces=[
+    const finalTraces=[
       {type:'bar',name:'柱形：60岁及以上人口',x:p.years,y:p.pop60,marker:{color:'#5B7FA6'},hovertemplate:'%{x}年<br>60岁及以上：%{y:,.0f}万人<extra></extra>'},
       {type:'scatter',mode:'lines+markers',name:'折线：占总人口比重',x:p.years,y:p.share60,yaxis:'y2',line:{color:C.accent,width:3},marker:{size:7,color:'#fff',line:{color:C.accent,width:2}},hovertemplate:'%{x}年<br>占总人口比重：%{y:.2f}%<extra></extra>'}
     ];
-    safePlot('populationChart',traces,commonLayout({hovermode:'x unified',xaxis:{...commonLayout().xaxis,tick0:2007,dtick:2,range:[2005.5,2025.5]},yaxis:{...commonLayout().yaxis,title:'人数（万人）',range:[0,36000],tick0:0,dtick:6000},yaxis2:{title:'占总人口比重（%）',overlaying:'y',side:'right',range:[0,25],tick0:0,dtick:5,showgrid:false,tickfont:{color:C.muted}}}));
+    const initialTraces=finalTraces.map((trace,i)=>({...trace,y:i===0?trace.y.map(()=>0):trace.y}));
+    const layout=commonLayout({hovermode:'x unified',xaxis:{...commonLayout().xaxis,tick0:2007,dtick:2,range:[2005.5,2025.5]},yaxis:{...commonLayout().yaxis,title:'人数（万人）',range:[0,36000],tick0:0,dtick:6000},yaxis2:{title:'占总人口比重（%）',overlaying:'y',side:'right',range:[0,25],tick0:0,dtick:5,showgrid:false,tickfont:{color:C.muted}}});
+    const plotReady=safePlot('populationChart',initialTraces,layout).then(el=>{
+      el.classList.add('population-line-pending');
+      const line=el.querySelector('.scatterlayer .trace.scatter .js-line');
+      const points=[...el.querySelectorAll('.scatterlayer .trace.scatter .points .point')];
+      if(line){const length=line.getTotalLength();line.style.strokeDasharray=`${length} ${length}`;line.style.strokeDashoffset=length}
+      points.forEach(point=>point.style.opacity='0');
+      return el;
+    });
+    const module=$('.pop-grid .chart-card');
+    module?.classList.add('population-enter');
+    if(module&&plotReady){
+      const obs=new IntersectionObserver(entries=>entries.forEach(entry=>{
+        if(!entry.isIntersecting)return;
+        module.classList.add('visible');
+        plotReady.then(el=>{
+          const reduced=document.body.classList.contains('motion-off')||matchMedia('(prefers-reduced-motion: reduce)').matches;
+          if(reduced){el.classList.remove('population-line-pending');Plotly.react(el,finalTraces,layout,plotConfig);return}
+          Plotly.animate(el,{data:[{y:p.pop60},{y:p.share60}],traces:[0,1]},{transition:{duration:1100,easing:'cubic-in-out'},frame:{duration:1100,redraw:false}}).then(()=>{
+            const line=el.querySelector('.scatterlayer .trace.scatter .js-line');
+            const points=[...el.querySelectorAll('.scatterlayer .trace.scatter .points .point')];
+            if(line){const length=line.getTotalLength();line.style.strokeDasharray=`${length} ${length}`;line.style.strokeDashoffset=length;line.style.transition='none'}
+            points.forEach(point=>{point.style.opacity='0';point.style.transition='none'});
+            el.classList.remove('population-line-pending');
+            requestAnimationFrame(()=>requestAnimationFrame(()=>{
+              if(line){line.style.transition='stroke-dashoffset 1450ms cubic-bezier(.22,1,.36,1)';line.style.strokeDashoffset='0'}
+              points.forEach((point,i)=>{point.style.transition='opacity .22s ease';point.style.transitionDelay=`${Math.round(i*67)}ms`;point.style.opacity='1'});
+            }));
+          });
+        });
+        obs.disconnect();
+      }),{threshold:.28});
+      obs.observe(module);
+    }
     const live=$('#populationLive');
     setTimeout(()=>{const c=$('#populationChart');if(c&&window.Plotly)Plotly.Plots.resize(c)},150);
     const el=$('#populationChart');el?.on('plotly_hover',ev=>{const year=ev.points[0].x;const i=p.years.indexOf(Number(year));if(i<0||!live)return;live.innerHTML=`<span>当前年份</span><strong>${year}</strong><div><b>${fmt(p.pop60[i]/10000,2)}亿</b><small>60岁及以上</small></div><div><b>${fmt(p.share60[i],2)}%</b><small>占总人口</small></div>`});
@@ -255,7 +302,7 @@ function initConsumptionIncome(){
   function initResize(){let t;addEventListener('resize',()=>{clearTimeout(t);t=setTimeout(()=>charts.forEach(el=>Plotly.Plots.resize(el)),150)})}
 
   function boot(){
-    initReveal();initScrollUI();initPopulation();initPictogram();initBurden();initFlow();initCoverage();initGap();initProvince();initCost();initBasket();initConsumptionIncome();initLabor();initVoiceAnalysis();initTimeline();initPolicyStandard();initCases();initForeign();initSources();initDownloads();initResize();
+    initReveal();initHeroQuestions();initScrollUI();initPopulation();initPictogram();initBurden();initFlow();initCoverage();initGap();initProvince();initCost();initBasket();initConsumptionIncome();initLabor();initVoiceAnalysis();initTimeline();initPolicyStandard();initCases();initForeign();initSources();initDownloads();initResize();
   }
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',boot);else boot();
 })();
