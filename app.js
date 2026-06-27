@@ -341,7 +341,7 @@ function initConsumptionIncome(){
     const rows=['voiceWordsA','voiceWordsB','voiceWordsC','voiceWordsD'];
     rows.forEach((id,ri)=>{const subset=words.filter((_,i)=>i%rows.length===ri);const html=[...subset,...subset].map((w,i)=>{const size=12+Math.min(14,Math.round(w.documentRate*18));const opacity=.14+Math.min(.24,w.documentRate*.28);return `<span style="--word-size:${size}px;--word-opacity:${opacity.toFixed(2)}">${w.word}</span>`}).join('');$(`#${id}`).innerHTML=html});
     const bubbleWrap=$('#voiceBubbles');let active=0,quoteIndex=0;
-    themes.forEach((t,i)=>{const size=Math.round(80+t.coverage*3.2);const b=document.createElement('button');b.type='button';b.className='voice-bubble';b.dataset.index=i;b.style.setProperty('--bubble-size',`${size}px`);b.style.setProperty('--bubble-color',t.color);b.setAttribute('role','listitem');b.setAttribute('aria-label',`${t.name}，覆盖率${t.coverage.toFixed(2)}%`);b.innerHTML=`<small>主题 ${String(i+1).padStart(2,'0')}</small><b>${t.short}</b><strong>${t.coverage.toFixed(2)}%</strong><em>${t.bubbleKeywords.join(' · ')}</em>`;['mouseenter','focus','click'].forEach(ev=>b.addEventListener(ev,()=>selectTheme(i)));bubbleWrap.appendChild(b)});
+    themes.forEach((t,i)=>{const size=Math.round(80+t.coverage*3.2);const b=document.createElement('button');b.type='button';b.className='voice-bubble';b.dataset.index=i;b.style.setProperty('--bubble-size',`${size}px`);b.style.setProperty('--bubble-color',t.color);b.setAttribute('role','listitem');b.setAttribute('aria-label',`${t.name}，覆盖率${t.coverage.toFixed(2)}%`);b.innerHTML=`<b>${t.short}</b><strong>${t.coverage.toFixed(2)}%</strong><em>${t.bubbleKeywords.join(' · ')}</em>`;['mouseenter','focus','click'].forEach(ev=>b.addEventListener(ev,()=>selectTheme(i)));bubbleWrap.appendChild(b)});
     function renderQuote(){const t=themes[active],m=t.messages[quoteIndex];$('#voiceMessageTitle').textContent=m.title;$('#voiceMessageText').textContent=m.text;$('#voiceMessageMeta').textContent=`${m.date} · ${m.source}`;$('#voiceQuoteCount').textContent=`${quoteIndex+1} / ${t.messages.length}`}
     function selectTheme(i){active=i;quoteIndex=0;const t=themes[i];$$('.voice-bubble',bubbleWrap).forEach((b,j)=>b.classList.toggle('active',j===i));$('#voiceThemeIndex').textContent=String(i+1).padStart(2,'0');$('#voiceThemeName').textContent=t.name;$('#voiceThemeCoverage').textContent=`${t.coverage.toFixed(2)}%`;$('#voiceThemeCount').textContent=`${fmt(t.count)}条留言`;$('#voiceThemeSummary').textContent=t.description;$('#voiceThemeAnalysis').textContent=t.analysis;$('#voiceKeywordList').innerHTML=t.keywords.map(k=>`<i>${k}</i>`).join('');$('#voiceDetail').style.borderTop=`5px solid ${t.color}`;renderQuote()}
     $('#voicePrev').addEventListener('click',()=>{const t=themes[active];quoteIndex=(quoteIndex-1+t.messages.length)%t.messages.length;renderQuote()});$('#voiceNext').addEventListener('click',()=>{const t=themes[active];quoteIndex=(quoteIndex+1)%t.messages.length;renderQuote()});
@@ -350,7 +350,17 @@ function initConsumptionIncome(){
   }
 
   function initTimeline(){
-    const nav=$('#timelineNav'),tl=$('#timeline');D.timeline.forEach((x,i)=>{const id=`time-${x.year}-${i}`;const b=document.createElement('button');b.textContent=x.year;b.title=x.title;b.addEventListener('click',()=>document.getElementById(id).scrollIntoView({behavior:'smooth',block:'center'}));nav.appendChild(b);const item=document.createElement('article');item.className='timeline-item';item.id=id;item.innerHTML=`<div class="timeline-year">${x.year}</div><div class="timeline-card"><span class="stage">${x.stage}</span><h4>${x.title}</h4><p>${x.text}</p></div>`;tl.appendChild(item)});
+    const nav=$('#timelineNav'),tl=$('#timeline');
+    const stages=[
+      {name:'集体兜底',range:'1956—1982',start:1956,end:1982},
+      {name:'老农保探索',range:'1983—1999',start:1983,end:1999},
+      {name:'制度重启',range:'2002—2013',start:2002,end:2013},
+      {name:'城乡并轨',range:'2014—2023',start:2014,end:2023},
+      {name:'提标提速与服务扩展',range:'2024—2026',start:2024,end:2026}
+    ];
+    D.timeline.forEach((x,i)=>{const id=`time-${x.year}-${i}`;const item=document.createElement('article');item.className='timeline-item';item.id=id;item.innerHTML=`<div class="timeline-year">${x.year}</div><div class="timeline-card"><span class="stage">${x.stage}</span><h4>${x.title}</h4><p>${x.text}</p></div>`;tl.appendChild(item)});
+    nav.classList.add('stage-nav');
+    stages.forEach((stage,index)=>{const targetIndex=D.timeline.findIndex(x=>Number(x.year)>=stage.start&&Number(x.year)<=stage.end);if(targetIndex<0)return;const b=document.createElement('button');b.innerHTML=`<span>${stage.name}</span><small>${stage.range}</small>`;b.addEventListener('click',()=>{document.getElementById(`time-${D.timeline[targetIndex].year}-${targetIndex}`)?.scrollIntoView({behavior:'smooth',block:'center'});$$('button',nav).forEach((button,i)=>button.classList.toggle('active',i===index))});nav.appendChild(b)});
     const obs=new IntersectionObserver(entries=>entries.forEach(e=>e.target.classList.toggle('visible',e.isIntersecting)),{threshold:.2});$$('.timeline-item').forEach(x=>obs.observe(x));
   }
 
