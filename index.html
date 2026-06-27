@@ -6,7 +6,7 @@
 <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
 <meta content="农村养老金交互式数据新闻：老龄化、制度构成、待遇差距、生活成本、公众诉求与地方实践。" name="description"/>
 <title>两三百元的晚年｜农村养老金够养老吗？</title>
-<link href="styles.css?v=20260628-4" rel="stylesheet"/>
+<link href="styles.css?v=20260628-9" rel="stylesheet"/>
 </head>
 <body>
 <div aria-hidden="true" id="scrollProgress"></div>
@@ -286,25 +286,27 @@
 <a class="scroll-cue chapter-cover-cue" href="#life-content"><span>进入晚年账本</span><i></i></a>
 </section>
 <section class="chapter chapter-life" id="life-content">
-<div class="narrative-block reveal"><p>对很多农村老人而言，养老金并不是一个抽象制度数字，而是一笔每月真正到账的钱。那么，这笔钱在现实生活中处在什么位置？它能覆盖多少日常支出？又还能买到什么？</p><p>和每月生活开支相比，养老金处在什么水平？、</p><p>农村居民月均消费支出增长明显快于养老金待遇水平。即便实际待遇高于基础养老金最低标准，但与现实生活成本相比仍存在显著差距。</p></div>
-<div class="story-grid wide reveal">
+<div class="section-intro reveal"><h3>一笔养老金，够过一个月吗？</h3></div><div class="narrative-block reveal"><p>对很多农村老人而言，养老金并不是一个抽象制度数字，而是一笔每月真正到账的钱。那么，这笔钱在现实生活中处在什么位置？它能覆盖多少日常支出？又还能买到什么？</p><p>和每月生活开支相比，养老金处在什么水平？、</p><p>农村居民月均消费支出增长明显快于养老金待遇水平。即便实际待遇高于基础养老金最低标准，但与现实生活成本相比仍存在显著差距。</p></div>
+<div class="cost-module reveal">
 <div class="chart-card large-chart">
-<div class="chart-title"><div><h3>养老金与农村居民月均消费支出的距离</h3><p>柱体下方是月均基金支出估算，上方浅色部分是生活支出缺口</p></div><button class="download-chart" data-chart="costChart">导出</button></div>
+<div class="chart-title"><div><h3>养老金与农村居民月均消费支出的距离</h3><p>柱体下方是月人均实际待遇，上方浅色为与农村月均消费之间的缺口；虚线为基础养老金最低标准</p></div><button class="download-chart" data-chart="costChart">导出</button></div>
 <div class="plot" id="costChart"></div>
-<div class="footnote"><p>数据来源：国家统计局历年《中国统计年鉴》；人力资源和社会保障部历年《人力资源和社会保障事业发展统计公报》及基础养老金调整文件</p><p>图注：农村居民月均消费支出用于近似衡量生活成本；养老金月人均实际待遇根据城乡居民基本养老保险基金支出和领取待遇人数测算。2014年起新农保与城居保并轨，主图从2014年开始。</p></div>
+<div class="cost-kpis">
+<div class="cost-kpi"><span>农村月均消费支出</span><strong>698.55 → 1,606.67 元/月</strong><small>10年增加 908.12 元</small></div>
+<div class="cost-kpi"><span>月人均实际待遇</span><strong>91.47 → 245.86 元/月</strong><small>10年增加 154.39 元</small></div>
+<div class="cost-kpi"><span>基础养老金最低标准</span><strong>70 → 123 元/月</strong><small>制度底线持续上移</small></div>
 </div>
-<div class="story-copy sticky-copy">
-<div class="live-card cost-live" id="costLive"><span>2024年</span><strong>15.30%</strong><small>养老金可覆盖的农村月均消费支出</small><div><b>245.86元</b><small>月均待遇估算</small></div><div><b>1,360.81元</b><small>月均缺口</small></div></div>
-<p>十年间，农村居民月均消费支出增加约908元，而养老金月均基金支出估算仅增加约154元。</p>
-<div class="conclusion-box"><span>待遇在提高，但生活成本跑得更快。</span></div>
+<div class="cost-conclusion">农村居民月均消费支出增长明显快于养老金待遇水平。即便实际待遇高于基础养老金最低标准，但与现实生活成本相比仍存在显著差距。</div>
+<div class="footnote"><p>数据来源：国家统计局历年《中国统计年鉴》；人力资源和社会保障部历年《人力资源和社会保障事业发展统计公报》及基础养老金调整文件</p><p>图注：农村居民月均消费支出用于近似衡量生活成本；养老金月人均实际待遇根据城乡居民基本养老保险基金支出和领取待遇人数测算。2014年起新农保与城居保并轨，主图从2014年开始。</p></div>
 </div>
 </div>
 <div class="dual-view reveal">
-<div class="view-tabs"><button class="active" data-cost-view="coverage">覆盖率</button><button data-cost-view="gap">月均缺口</button></div>
+<div class="dual-view-head"><div class="chart-title"><div><h3>一笔养老金，能覆盖几成日常支出？</h3></div></div><div class="view-tabs"><button class="active" data-cost-view="coverage">覆盖率</button><button data-cost-view="gap">月均缺口</button></div></div>
 <div class="plot medium" id="coverageRateChart"></div>
-<div class="dynamic-sentence" id="coverageNarrative">2014年，一笔养老金约能覆盖13.09%的农村月均消费支出。</div>
+<div class="dynamic-sentence" id="coverageNarrative">2024年，养老金覆盖率15.3%，月均缺口1360.81元，若仅靠养老金仍需补足约 84.7%的生活开支。</div>
+<div class="dynamic-sentence" style="margin-top:12px">养老金能够减轻部分生活压力，但还不足以成为农村老年人独立生活的主要收入来源。</div>
 <div class="footnote"><p>数据来源：同上：国家统计局农村居民消费支出数据、人社部城乡居民养老保险基金支出及领取人数</p><p>图注：覆盖率＝养老金月人均支出估算÷农村居民月均消费支出；月均缺口＝农村居民月均消费支出－养老金月人均支出估算。该指标为总体平均口径。</p></div></div>
-<div class="section-intro reveal"><p class="eyebrow">购物篮实验</p><h3>拿着245.86元，试着拼出一个月的基础生活</h3><p>点击项目加入购物篮。你会发现，一袋米就可能让预算见底。</p></div><div class="narrative-block reveal"><p>具体到农村家庭，生活压力落在了一笔笔难以省去的日常开销上。武汉大学吕德文教授在湖北宜昌某村调研时，记录了一对农村老人的年度生活账本。</p><p>老人长期保持较低的消费水平，但将这份账本换算为月均支出，仅米面油、常规医药、水电和通信四项，每月就需要约593—802元，日常买菜、人情往来和突发医疗等费用都尚未计入。以2024年城乡居民养老保险人均月待遇约246元作为参照，单个老人的养老金显然难以覆盖这些基本开销；即使夫妻二人均领取，家庭养老金仍低于最低支出线。</p></div>
+<div class="section-intro reveal"><p class="eyebrow">购物篮实验</p><h3>用245.86元，拼出一个月的基础生活</h3></div><div class="narrative-block reveal"><p>具体到农村家庭，生活压力落在了一笔笔难以省去的日常开销上。武汉大学吕德文教授在湖北宜昌某村调研时，记录了一对农村老人的年度生活账本（老人和女儿一家同住，所有日常消费包含子代的消耗）。</p><p>老人长期保持较低的消费水平，但将这份账本换算为月均支出，仅米面油、常规医药、水电和通信四项，每月就需要约593—802元，日常买菜、人情往来和突发医疗等费用都尚未计入。以2024年城乡居民养老保险人均月待遇约246元作为参照，单个老人的养老金显然难以覆盖这些基本开销；即使夫妻二人均领取，家庭养老金仍低于最低支出线。</p></div>
 <div class="basket-module reveal">
 <div class="basket-items" id="basketItems"></div>
 <aside class="basket-summary">
@@ -314,24 +316,46 @@
 <button id="basketReset" type="button">清空购物篮</button>
 </aside>
 </div>
-<div class="footnote standalone"><p>数据来源：吕德文《农村老人家庭一年的开支究竟有多少》（湖北宜昌单户田野调查案例）；中国农业大学鞠荣华教授相关估算；全国农村低保平均标准。</p><p>图注：购物篮将米、面、油、水电、通信和常规医药支出折算为月均金额，仅用于理解245.86元养老金的购买力。单户案例、专家估算和政策标准属于不同证据层次，不代表全国农村老年人的平均生活成本。</p></div>
+<div class="footnote standalone basket-source"><p>数据来源：武汉大学吕德文教授《农村老人家庭一年的开支究竟有多少》（观察者网，2026年5月25日），该调查亦收录于其著作《县乡生活》</p><p>图注：购物篮将米、面、油、水电、通信和常规医药支出折算为月均金额，仅用于理解245.86元养老金的购买力。单户案例不代表全国农村老年人的刚性支出。</p></div>
 <div class="narrative-block reveal"><p class="eyebrow">老年人的消费结构</p><p>整体而言，我国老年人的消费仍以满足基本生存需求为主，食品烟酒支出占近六成，医疗保健占15.54%。相比之下，教育文娱、生活服务和其他支出合计不足4%，用于休闲、社交和改善生活品质的花销十分有限。这并不代表老年人缺乏消费意愿，而是在收入有限的前提下，刚性需求已经占据大部分“钱包”。对于收入更低、保障相对薄弱的农村老人而言，这种消费约束更为明显。</p></div><div class="single-chart-block consumption-structure-block reveal"><div class="chart-card">
 <div class="chart-title"><div><h3>每100元支出，被哪些“不能省”的项目分走？</h3><p>2020年全国老年人消费结构｜悬停查看各类支出的具体含义</p></div></div>
 <div class="wallet-kicker"><span>把老年人的100元消费支出装进一只“钱包”</span><strong>近60元首先用于食品烟酒</strong></div><div class="plot consumption-treemap" id="consumptionChart"></div>
 <div class="interactive-detail spending-detail" id="consumptionDetail"><b>食品烟酒 59.96%</b><span>食品、烟酒及外出餐饮等基本生活消费</span></div>
-<div class="footnote"><p>数据来源：《中国老龄发展报告（2025）》；数据基础为第五次中国城乡老年人生活状况抽样调查</p><p>图注：消费支出主要回顾2020年实际发生情况。横向条形图按消费占比从高到低排序；悬停或点击不同项目，下方解释条会同步切换。</p></div></div></div><div class="narrative-block reveal"><p class="eyebrow">农村老人光靠养老金不够生活，仍依赖其他收入来源</p><p>当养老金增长赶不上生活成本，农村老人只能通过劳动、家庭支持等其他收入填补生活缺口。城乡老年人的收入结构，也呈现出两种不同的养老方式。</p><p>以2021年为例，城镇老年人的收入主要来自社会保障性收入和财产性收入，两者合计占88.3%，而农村老年人的社会保障性收入仅占42.7%，不足总收入的一半。值得注意的是，农村老人的经营性收入占比高达36.9%，是城镇老年人的近4.9倍。</p><p>这意味着，单从收入结构来看，我国城镇老人养老更依赖外部保障，农村老人则更依赖个人劳作和家庭支持，养老这件事情本身就存在结构性差距。</p></div><div class="single-chart-block income-compare-block reveal"><div class="chart-card">
+<div class="footnote"><p>数据来源：中国老龄科学研究中心-《中国老龄发展报告(2025)》</p><p>图注：数据基础为第五次中国城乡老年人生活状况抽样调查，消费支出主要回顾2020年实际发生情况。</p></div></div></div><div class="section-intro reveal"><p class="eyebrow">农村老人收入结构</p><h3>农村老人光靠养老金不够生活，仍依赖其他收入来源</h3></div><div class="narrative-block reveal"><p>当养老金增长赶不上生活成本，农村老人只能通过劳动、家庭支持等其他收入填补生活缺口。城乡老年人的收入结构，也呈现出两种不同的养老方式。</p><p>以2021年为例，城镇老年人的收入主要来自社会保障性收入和财产性收入，两者合计占88.3%，而农村老年人的社会保障性收入仅占42.7%，不足总收入的一半。值得注意的是，农村老人的经营性收入占比高达36.9%，是城镇老年人的近4.9倍。</p><p>这意味着，单从收入结构来看，我国城镇老人养老更依赖外部保障，农村老人则更依赖个人劳作和家庭支持，养老这件事情本身就存在结构性差距。</p></div><div class="single-chart-block income-compare-block reveal"><div class="chart-card">
 <div class="chart-title"><div><h3>同样进入晚年，城乡老人靠什么获得收入？</h3><p>2021年城乡老年人收入结构对比</p></div></div>
-<div class="plot medium" id="incomeCompareChart"></div>
+<div class="income-diverge">
+<div class="idv-head"><span class="idv-head-rural">农村老人</span><span></span><span class="idv-head-urban">城镇老人</span></div>
+<div class="idv-row" style="--c:#9c8a77">
+<div class="idv-left"><span class="idv-val">10.6%</span><div class="idv-bar" style="width:10.6%"></div></div>
+<div class="idv-mid"><span class="idv-ico">🏠</span><span class="idv-name">家庭转移性收入</span></div>
+<div class="idv-right"><div class="idv-bar" style="width:4.1%"></div><span class="idv-val">4.1%</span></div>
+</div>
+<div class="idv-row" style="--c:#e0b13c">
+<div class="idv-left"><span class="idv-val">9.8%</span><div class="idv-bar" style="width:9.8%"></div></div>
+<div class="idv-mid"><span class="idv-ico">💰</span><span class="idv-name">财产性收入</span></div>
+<div class="idv-right"><div class="idv-bar" style="width:20.3%"></div><span class="idv-val">20.3%</span></div>
+</div>
+<div class="idv-row" style="--c:#e0825f">
+<div class="idv-left"><span class="idv-val">36.9%</span><div class="idv-bar" style="width:36.9%"></div></div>
+<div class="idv-mid"><span class="idv-ico">💼</span><span class="idv-name">经营性收入</span></div>
+<div class="idv-right"><div class="idv-bar" style="width:7.6%"></div><span class="idv-val">7.6%</span></div>
+</div>
+<div class="idv-row" style="--c:#5e7d8a">
+<div class="idv-left"><span class="idv-val">42.7%</span><div class="idv-bar" style="width:42.7%"></div></div>
+<div class="idv-mid"><span class="idv-ico">🛡️</span><span class="idv-name">社会保障性收入</span></div>
+<div class="idv-right"><div class="idv-bar" style="width:68%"></div><span class="idv-val">68.0%</span></div>
+</div>
+</div>
 <div class="conclusion-box"><span>农村老人的经营性收入占36.9%，约为城镇老人的4.9倍。</span></div>
 <div class="footnote"><p>数据来源：《第五次中国城乡老年人生活状况抽样调查基本数据公报》</p><p>图注：2021年城乡老年人四类收入占比之和均为100%。该图用于比较收入结构，不代表城乡老年人的绝对收入金额。</p></div></div></div>
 <div class="narrative-block reveal"><p>拆解农村老年人的收入构成可见，经营性收入主要来自务农、务工、兼职返聘以及小规模经营。对不少农村老人而言，达到领取养老金的年龄，并不等于真正离开劳动市场。城乡居民养老金在一定程度上支撑了农村老年人的基本生活开销，但他们仍需要从事一定的劳动来补充收入。家庭转移性收入包含子女亲属接济与人情往来收入，是农村养老的重要补充；但农村人情往来开支较多，也会对有限的养老金形成消耗压力。</p></div><div class="income-drill reveal">
-<div><div class="plot medium" id="ruralIncomeChart"></div></div>
-<aside class="income-detail" id="incomeDetail"><span class="badge">点击圆环查看构成</span><h3>社会保障性收入</h3><strong>42.7%</strong><div class="detail-list"></div></aside>
+<div class="income-chart-panel"><div class="income-chart-heading"><h3>农村老年人收入结构</h3><p>2021年 · 点击圆环切换类别</p></div><div class="plot medium" id="ruralIncomeChart"></div></div>
+<aside class="income-detail" id="incomeDetail" aria-live="polite"></aside>
 <div class="footnote"><p>数据来源：《第五次中国城乡老年人生活状况抽样调查个人问卷》</p><p>图注：圆环展示农村老年人四类收入占比；右侧二级项目用于解释各类收入可能包含的具体来源，不为二级项目分配额外比例。</p></div></div>
-<div class="section-intro reveal"><p class="eyebrow">继续劳动</p><h3>当养老金不足以覆盖生活，劳动成为现实的补位机制</h3></div><div class="narrative-block reveal"><p>如果说农村养老仍由“养老金+家庭支持+继续劳动”共同维系，那么接下来需要进一步追问的是：在这三者之中，继续劳动究竟承担了多大分量？从收入水平看，劳动收入与养老金之间存在明显量级差异，这也是许多农村家庭不得不继续劳动的重要原因。与此同时，承担这一补位功能的人群也在持续老化，意味着“继续劳动”这条路径本身正面临新的压力。</p></div>
+<div class="section-intro reveal"><p class="eyebrow">继续劳动</p><h3>当养老金不足以覆盖生活，劳动成为现实的补位机制</h3></div><div class="narrative-block reveal"><p>如果说农村养老仍由“养老金+家庭支持+继续劳动”共同维系，那么在这三者之中，继续劳动究竟承担了多大分量？</p></div>
 <div class="two-chart-grid reveal">
 <div class="chart-card">
-<div class="chart-title"><div><h3>劳动收入与养老金，始终不是一个量级</h3><p>2014—2024年农民工月均收入与居民养老月均支出估算</p></div></div>
+<div class="chart-title"><div><h3>劳动收入与养老金，始终不是一个量级</h3><p>2014-2024&nbsp;&nbsp;养老金月人均实际待遇 vs 农民工月均收入</p></div></div>
 <div class="plot medium" id="laborGapChart"></div>
 <div class="footnote"><p>数据来源：国家统计局历年《农民工监测调查报告》；人力资源和社会保障部历年《人力资源和社会保障事业发展统计公报》</p><p>图注：两类指标并非针对同一人群。收入倍数＝农民工月均收入÷城乡居民养老保险月人均支出估算；比较仅用于说明劳动收入与养老金待遇的量级差异。</p></div>
 </div>
@@ -340,7 +364,7 @@
 <div class="plot medium" id="agingWorkerChart"></div>
 <div class="conclusion-box"><span>2025年，约每3名农民工中就有1名在50岁以上。</span></div>
 <div class="footnote"><p>数据来源：国家统计局2009—2025年《农民工监测调查报告》</p><p>图注：50岁以上农民工占比包含50—59岁和60岁及以上群体；大量50—59岁劳动者尚未达到城乡居民养老保险待遇领取年龄。</p></div></div>
-</div><div class="narrative-block quote-note reveal"><p>2014—2024年，农民工月均收入由2864元增至4961元，而城乡居民养老保险月人均实际待遇仅由91.47元增至245.86元。尽管养老金待遇持续提高，但劳动收入与养老金之间始终存在显著量级差异。这表明，在养老金保障水平有限的情况下，继续劳动仍是许多农村家庭弥补养老生活缺口的重要收入来源。</p><p>根据《国务院关于建立统一的城乡居民基本养老保险制度的意见》（国发〔2014〕8号），城乡居民养老保险待遇领取年龄为60周岁，大量50—59岁的中高龄农民工尚未进入养老金领取阶段，仍需主要依靠劳动收入维持生活；而未来其中相当一部分人在退出劳动力市场后将回到农村养老。这意味着，“继续劳动”虽然是当前农村养老的重要补位机制，但其可持续性本身也在面临人口老化带来的压力。</p><p>“农民的劳作一生没有尽头。”这句带有文学性的表达已成为中国农村1.2亿老年人的真实写照。</p></div>
+</div>
 </section>
 <section class="chapter-cover chapter-response-cover" id="response">
 <div class="chapter-cover-layout reveal">

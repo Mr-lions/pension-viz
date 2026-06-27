@@ -243,15 +243,16 @@
 
   function initCost(){
     const d=D.livingCost,gap=d.ruralConsumption.map((v,i)=>+(v-d.pension[i]).toFixed(2));
+    const cov=d.ruralConsumption.map((v,i)=>d.pension[i]/v*100);
+    const last=d.years.length-1;
     const traces=[
-      {type:'bar',name:'养老金月均支出估算',x:d.years,y:d.pension,marker:{color:C.red},customdata:d.ruralConsumption.map((v,i)=>[v,gap[i],d.pension[i]/v*100]),hovertemplate:'%{x}年<br>待遇估算：%{y:.2f}元<br>农村月均消费：%{customdata[0]:.2f}元<br>缺口：%{customdata[1]:.2f}元<br>覆盖率：%{customdata[2]:.2f}%<extra></extra>'},
-      {type:'bar',name:'月均生活缺口',x:d.years,y:gap,marker:{color:C.soft},hoverinfo:'skip'},
-      {type:'scatter',mode:'lines+markers',name:'全国基础养老金最低标准',x:d.years,y:d.baseMinimum,line:{color:C.accent,width:3,dash:'dot'},marker:{size:5},hovertemplate:'%{x}年<br>最低标准：%{y:.0f}元<extra></extra>'}
+      {type:'bar',name:'月人均实际待遇',x:d.years,y:d.pension,marker:{color:C.accent2},customdata:d.years.map((y,i)=>[d.ruralConsumption[i],gap[i],cov[i],d.baseMinimum[i]]),hovertemplate:'%{x}年<br>月均消费：%{customdata[0]:.2f} 元<br>实际待遇：%{y:.2f} 元<br>缺口：%{customdata[1]:.2f} 元<br>覆盖率：%{customdata[2]:.2f}%<br>最低标准：%{customdata[3]:.0f} 元<extra></extra>'},
+      {type:'bar',name:'月均缺口',x:d.years,y:gap,marker:{color:'#fbe6cf'},hoverinfo:'skip'},
+      {type:'scatter',mode:'lines+markers',name:'基础养老金最低标准',x:d.years,y:d.baseMinimum,line:{color:C.accent,width:3,dash:'dash'},marker:{size:6,color:C.accent},hovertemplate:'%{x}年<br>最低标准：%{y:.0f} 元<extra></extra>'}
     ];
-    safePlot('costChart',traces,commonLayout({barmode:'stack',hovermode:'x unified',yaxis:{...commonLayout().yaxis,title:'元/月'},xaxis:{...commonLayout().xaxis,dtick:1}}));
-    const el=$('#costChart');el?.on('plotly_hover',ev=>{const year=Number(ev.points[0].x),i=d.years.indexOf(year);if(i<0)return;const rate=d.pension[i]/d.ruralConsumption[i]*100;$('#costLive').innerHTML=`<span>${year}年</span><strong>${rate.toFixed(2)}%</strong><small>养老金可覆盖的农村月均消费支出</small><div><b>${fmt(d.pension[i],2)}元</b><small>月均待遇估算</small></div><div><b>${fmt(gap[i],2)}元</b><small>月均缺口</small></div>`});
+    safePlot('costChart',traces,commonLayout({barmode:'stack',hovermode:'x unified',legend:{orientation:'h',x:.5,xanchor:'center',y:1.13,font:{size:11,color:C.body}},yaxis:{...commonLayout().yaxis,title:'金额（元）',range:[0,1800],dtick:300,automargin:true},xaxis:{...commonLayout().xaxis,dtick:1},annotations:[{x:d.years[last],y:d.ruralConsumption[last],text:`${fmt(gap[last],2)}元`,showarrow:false,yshift:13,font:{size:11,color:C.muted}},{x:d.years[last],y:d.baseMinimum[last],text:`${fmt(d.baseMinimum[last])}元`,showarrow:false,yshift:-14,font:{size:11,color:C.accent}}]}));
     let view='coverage';
-    function drawView(){const y=view==='coverage'?d.pension.map((v,i)=>+(v/d.ruralConsumption[i]*100).toFixed(2)):gap;const trace=view==='coverage'?{type:'scatter',mode:'lines+markers',x:d.years,y,fill:'tozeroy',fillcolor:'rgba(231,135,104,.12)',line:{color:C.red,width:4},marker:{size:7},hovertemplate:'%{x}年<br>覆盖率：%{y:.2f}%<extra></extra>'}:{type:'bar',x:d.years,y,marker:{color:C.bar},hovertemplate:'%{x}年<br>月均缺口：%{y:.2f}元<extra></extra>'};const shapes=view==='coverage'?[{type:'line',x0:2014,x1:2024,y0:14.29,y1:14.29,line:{color:C.gold,width:2,dash:'dot'}}]:[{type:'line',x0:2014,x1:2024,y0:1000,y1:1000,line:{color:C.gold,width:2,dash:'dot'}}];safePlot('coverageRateChart',[trace],commonLayout({showlegend:false,shapes,yaxis:{...commonLayout().yaxis,title:view==='coverage'?'覆盖率（%）':'元/月'},xaxis:{...commonLayout().xaxis,dtick:1}}));setTimeout(()=>{$('#coverageRateChart')?.on('plotly_hover',ev=>{const yr=Number(ev.points[0].x),i=d.years.indexOf(yr);$('#coverageNarrative').textContent=view==='coverage'?`${yr}年，一笔养老金约能覆盖${(d.pension[i]/d.ruralConsumption[i]*100).toFixed(2)}%的农村月均消费支出。`:`${yr}年，养老金与农村月均消费支出之间仍有${gap[i].toFixed(2)}元缺口。`})},0)}
+    function drawView(){const y=view==='coverage'?d.pension.map((v,i)=>+(v/d.ruralConsumption[i]*100).toFixed(2)):gap;const trace=view==='coverage'?{type:'scatter',mode:'lines+markers',x:d.years,y,fill:'tozeroy',fillcolor:'rgba(231,135,104,.12)',line:{color:C.red,width:4},marker:{size:7},hovertemplate:'%{x}年<br>覆盖率：%{y:.2f}%<extra></extra>'}:{type:'bar',x:d.years,y,marker:{color:C.bar},hovertemplate:'%{x}年<br>月均缺口：%{y:.2f}元<extra></extra>'};const shapes=view==='coverage'?[{type:'line',x0:2014,x1:2024,y0:14.29,y1:14.29,line:{color:C.gold,width:2,dash:'dot'}}]:[{type:'line',x0:2014,x1:2024,y0:1000,y1:1000,line:{color:C.gold,width:2,dash:'dot'}}];safePlot('coverageRateChart',[trace],commonLayout({showlegend:false,shapes,yaxis:{...commonLayout().yaxis,title:view==='coverage'?'覆盖率（%）':'元/月',range:view==='coverage'?[0,18]:[0,1500],dtick:view==='coverage'?3:300,automargin:true},xaxis:{...commonLayout().xaxis,dtick:1}}));setTimeout(()=>{$('#coverageRateChart')?.on('plotly_hover',ev=>{const yr=Number(ev.points[0].x),i=d.years.indexOf(yr);$('#coverageNarrative').textContent=view==='coverage'?`${yr}年，一笔养老金约能覆盖${(d.pension[i]/d.ruralConsumption[i]*100).toFixed(2)}%的农村月均消费支出。`:`${yr}年，养老金与农村月均消费支出之间仍有${gap[i].toFixed(2)}元缺口。`})},0)}
     $$('.view-tabs button').forEach(btn=>btn.addEventListener('click',()=>{$$('.view-tabs button').forEach(b=>b.classList.remove('active'));btn.classList.add('active');view=btn.dataset.costView;drawView()}));drawView();
   }
 
@@ -295,11 +296,34 @@ function initConsumptionIncome(){
     cEl?.on('plotly_click',ev=>{const name=ev.points[0].y,item=c.find(x=>x.name===name);setConsumptionDetail(item)});
     setConsumptionDetail(c[0]);
 
-    const s=D.incomeStructure,traces=s.categories.map((cat,i)=>({type:'bar',orientation:'h',name:cat,y:['城镇老人','农村老人'],x:[s.urban[i],s.rural[i]],marker:{color:[C.blue,C.red,C.gold,'#9c8a77'][i]},hovertemplate:`${cat}<br>%{y}：%{x:.1f}%<extra></extra>`}));
-    safePlot('incomeCompareChart',traces,commonLayout({barmode:'stack',margin:{l:75,r:20,t:30,b:40},xaxis:{...commonLayout().xaxis,title:'占收入比重（%）',range:[0,100]},yaxis:{...commonLayout().yaxis,showgrid:false},legend:{orientation:'h',x:.5,xanchor:'center',y:1.2,font:{size:9}}}));
-    safePlot('ruralIncomeChart',[{type:'pie',labels:s.categories,values:s.rural,hole:.56,sort:false,pull:[.05,0,0,0],marker:{colors:[C.blue,C.red,C.gold,'#9c8a77'],line:{color:'#fff',width:3}},hovertemplate:'%{label}<br>%{value:.1f}%<extra></extra>'}],commonLayout({margin:{l:15,r:15,t:15,b:15},showlegend:true,legend:{orientation:'h',x:.5,xanchor:'center',y:-.08,font:{size:10}}}));
-    function incomeDetail(name){const i=s.categories.indexOf(name),items=D.incomeDetails[name];$('#incomeDetail').innerHTML=`<span class="badge">农村老年人收入构成</span><h3>${name}</h3><strong>${s.rural[i].toFixed(1)}%</strong><div class="detail-list">${items.map(x=>`<div><b>${x[0]}</b><span>${x[1]}</span></div>`).join('')}</div>`}
-    $('#ruralIncomeChart')?.on('plotly_click',ev=>incomeDetail(ev.points[0].label));incomeDetail('社会保障性收入');
+    const s=D.incomeStructure;
+    const incomeSummaries={
+      '社会保障性收入':'包括各类养老金、补贴、救助等社会保障相关收入',
+      '经营性收入':'主要来自务农、务工、兼职返聘和小规模自主经营',
+      '财产性收入':'来自房屋、土地、存款与投资等资产形成的收入',
+      '家庭转移性收入':'主要由子女、孙辈及其他亲属提供的资金或实物支持'
+    };
+    const incomePlot=safePlot('ruralIncomeChart',[{type:'pie',labels:s.categories,values:s.rural,hole:.48,sort:false,direction:'clockwise',textinfo:'label+percent',textposition:'inside',insidetextorientation:'horizontal',pull:[.075,0,0,0],marker:{colors:[C.blue,C.red,C.gold,'#9c8a77'],line:{color:'#fff',width:4}},hovertemplate:'%{label}<br>%{value:.1f}%<extra></extra>'}],commonLayout({margin:{l:22,r:22,t:12,b:72},showlegend:true,legend:{orientation:'h',x:.5,xanchor:'center',y:-.05,font:{size:11}},uniformtext:{minsize:11,mode:'hide'},transition:{duration:360,easing:'cubic-in-out'}}));
+    function incomeDetail(name){
+      const i=s.categories.indexOf(name),items=D.incomeDetails[name],detail=$('#incomeDetail');
+      if(!detail||i<0)return;
+      detail.innerHTML=`<span class="badge">点击圆环可切换</span><div class="income-detail-title"><h3>${name}</h3><strong>${s.rural[i].toFixed(1)}%</strong></div><p class="income-detail-summary">${incomeSummaries[name]}</p><div class="detail-list">${items.map((x,index)=>`<div><i>${String(index+1).padStart(2,'0')}</i><b>${x[0]}</b><span>${x[1]}</span></div>`).join('')}</div><p class="income-detail-note">四类收入占比之和为100%，用于展示农村老年人的收入结构。</p>`;
+    }
+    let selectedIncomeIndex=0;
+    const incomePull=(activeIndex,amount=.075)=>s.categories.map((_,index)=>index===activeIndex ? amount : 0);
+    function selectIncome(name,chart){
+      const i=s.categories.indexOf(name);if(i<0)return;
+      selectedIncomeIndex=i;
+      incomeDetail(name);
+      if(chart&&window.Plotly)Plotly.restyle(chart,{pull:[incomePull(i)]},[0]);
+    }
+    incomePlot?.then(chart=>{
+      chart.on('plotly_click',ev=>selectIncome(ev.points[0].label,chart));
+      chart.on('plotly_hover',ev=>{const i=s.categories.indexOf(ev.points[0].label);if(i>=0)Plotly.restyle(chart,{pull:[incomePull(i,.14)]},[0])});
+      chart.on('plotly_unhover',()=>Plotly.restyle(chart,{pull:[incomePull(selectedIncomeIndex)]},[0]));
+      selectIncome('社会保障性收入',chart);
+    });
+    incomeDetail('社会保障性收入');
   }
 
   function initLabor(){
