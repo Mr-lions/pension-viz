@@ -50,6 +50,7 @@
     ];
     safePlot('populationChart',traces,commonLayout({hovermode:'x unified',xaxis:{...commonLayout().xaxis,tick0:2007,dtick:2,range:[2005.5,2025.5]},yaxis:{...commonLayout().yaxis,title:'人数（万人）',range:[0,36000],tick0:0,dtick:6000},yaxis2:{title:'占总人口比重（%）',overlaying:'y',side:'right',range:[0,25],tick0:0,dtick:5,showgrid:false,tickfont:{color:C.muted}}}));
     const live=$('#populationLive');
+    setTimeout(()=>{const c=$('#populationChart');if(c&&window.Plotly)Plotly.Plots.resize(c)},150);
     const el=$('#populationChart');el?.on('plotly_hover',ev=>{const year=ev.points[0].x;const i=p.years.indexOf(Number(year));if(i<0||!live)return;live.innerHTML=`<span>当前年份</span><strong>${year}</strong><div><b>${fmt(p.pop60[i]/10000,2)}亿</b><small>60岁及以上</small></div><div><b>${fmt(p.share60[i],2)}%</b><small>占总人口</small></div>`});
   }
 
@@ -96,6 +97,7 @@
       {type:'bar',name:'基金支出',x:d.years,y:d.expense,yaxis:'y2',marker:{color:'rgba(231,135,104,.75)'},hovertemplate:'%{x}年<br>基金支出：%{y:,.0f}亿元<extra></extra>'}
     ];
     safePlot('coverageChart',traces,commonLayout({barmode:'group',hovermode:'x unified',yaxis:{...commonLayout().yaxis,title:'人数（万人）',range:[0,60000]},yaxis2:{title:'基金收支（亿元）',overlaying:'y',side:'right',range:[0,9000],showgrid:false},xaxis:{...commonLayout().xaxis,dtick:1}}));
+    setTimeout(()=>{const c=$('#coverageChart');if(c&&window.Plotly)Plotly.Plots.resize(c)},160);
     const s=$('#coverageSlider');function update(){const i=+s.value,y=d.years[i];$('#coverageYear').textContent=y;$('#insuredKpi').textContent=yi(d.insured[i]);$('#recipientKpi').textContent=yi(d.recipients[i]);$('#benefitKpi').textContent=`${d.benefit[i].toFixed(2)}元`;if(charts.get('coverageChart'))Plotly.relayout('coverageChart',{'shapes':[ {type:'line',x0:y,x1:y,y0:0,y1:1,yref:'paper',line:{color:C.accent,width:2,dash:'dot'}}]})}s.addEventListener('input',update);update();
   }
 

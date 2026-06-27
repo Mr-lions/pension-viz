@@ -78,7 +78,7 @@
 <section class="chapter chapter-aging" id="aging-content">
 <div class="screen">
 <div class="narrative-block reveal"><p class="eyebrow">农村老年人口规模与老龄化背景</p><p>老龄化不是遥远的未来。过去二十年，全国60岁及以上人口从2006年的约1.49亿人增长至2025年的3.23亿人；占总人口的比重从11%攀升至23%。</p></div>
-<div class="story-grid wide reveal">
+<div class="story-grid wide reveal pop-grid">
 <div class="chart-card large-chart" style="grid-column:1/-1">
 <div class="chart-title"><div><h3>我国60岁及以上老年人口数量及占比</h3><p>2006—2025年全国60岁及以上人口数量及占总人口比重</p></div><span class="chart-hint">悬停查看 · 可缩放</span></div>
 <div class="plot-wrap" id="populationPlotWrap">
@@ -202,21 +202,26 @@
 <div class="total"><span>估算月养老金</span><b id="calcTotal">209.82</b><small>元/月</small></div>
 </div>
 </div><div class="footnote"><p>数据来源：国发〔2014〕8号及河南省城乡居民养老保险缴费档次示例</p><p>图注：计算器用于解释“基础养老金＋个人账户养老金”的计算逻辑，未计账户利息、补缴、长缴加发和地方特殊政策，不代表个人最终待遇。</p></div>
-<div class="story-grid wide reveal">
+<div class="story-grid wide reveal coverage-grid">
 <div class="story-copy sticky-copy">
 <p class="eyebrow">覆盖广，待遇低</p>
 <h3>5.38亿人参保，月均基金支出估算约246元</h3>
-<p>更重要的是，246元是全国平均数。上海（1555元）、北京（998元）这样的超高发放地区，把全国平均数拉高了。而绝大多数农村老人，基础养老金大多在150元—190元之间——不同于城镇职工的强制参保，农村居民基于自愿参保，大多数农村老人个人账户几乎没有积累，对国家基础养老金和政府缴费补贴依赖较强。</p><p>2024年，城乡居民养老保险基金支出5322亿元，除以1.8亿待遇领取人员，月人均支出约246元。这里的246元是全国所有参保城乡居民基本养老保险每个人能领到的平均值，因为国家推行“应保尽保”，农村老年人基本都参加了城乡居民基本养老保险，所以农村老年人每个月人均领到个人养老金也差不多是246元。（放在246数字那边，想一个交互形式）</p><p>但“覆盖很多人”与“每个人获得足够强的养老保障”，并不是同一件事。</p><p>城乡居民基本养老保险确实覆盖了庞大的人口。截至2024年底，参保人数达5.38亿，实际待遇领取人员1.8亿人，是全世界覆盖人数最多的养老金制度之一。</p><label class="year-slider">年份 <b id="coverageYear">2024</b><input id="coverageSlider" max="10" min="0" step="1" type="range" value="10"/></label>
+<p>2024年，城乡居民养老保险基金支出5322亿元，除以1.8亿待遇领取人员，月人均支出约246元。这里的246元是全国所有参保城乡居民基本养老保险每个人能领到的平均值，因为国家推行“应保尽保”，农村老年人基本都参加了城乡居民基本养老保险，所以农村老年人每个月人均领到个人养老金也差不多是246元。</p><p>更重要的是，246元是全国平均数。上海（1555元）、北京（998元）这样的超高发放地区，把全国平均数拉高了。而绝大多数农村老人，基础养老金大多在150元—190元之间——不同于城镇职工的强制参保，农村居民基于自愿参保，大多数农村老人个人账户几乎没有积累，对国家基础养老金和政府缴费补贴依赖较强。</p><label class="year-slider">年份 <b id="coverageYear">2024</b><input id="coverageSlider" max="10" min="0" step="1" type="range" value="10"/></label>
 <div class="mini-kpis">
 <div><span>参保人数</span><strong id="insuredKpi">5.38亿</strong></div>
 <div><span>领取待遇人数</span><strong id="recipientKpi">1.80亿</strong></div>
 <div><span>月均支出估算</span><strong id="benefitKpi">245.86元</strong></div>
 </div>
 </div>
+<div class="chart-stack">
+<div class="chart-card lead-card">
+<div class="chart-lead"><p>城乡居民基本养老保险确实覆盖了庞大的人口。截至2024年底，参保人数达5.38亿，实际待遇领取人员1.8亿人，是全世界覆盖人数最多的养老金制度之一。</p><p>但“覆盖很多人”与“每个人获得足够强的养老保障”，并不是同一件事。</p></div>
+</div>
 <div class="chart-card large-chart">
 <div class="chart-title"><div><h3>参保规模、待遇领取与基金收支</h3><p>2014—2024年城乡居民基本养老保险</p></div><button class="download-chart" data-chart="coverageChart">导出</button></div>
 <div class="plot" id="coverageChart"></div>
 <div class="footnote"><p>数据来源：人力资源和社会保障部2014—2024年度《人力资源和社会保障事业发展统计公报》</p><p>图注：参保人数、待遇领取人数和基金收支均为城乡居民基本养老保险统计口径。月人均支出估算＝年度基金支出÷实际领取待遇人数÷12，不等同于每位参保人的实际到手养老金。</p></div>
+</div>
 </div>
 </div>
 <div class="section-intro reveal"><p class="eyebrow">制度鸿沟</p><h3>同样叫“基本养老保险”，两套制度的保障强度并不相同</h3></div><div class="narrative-block reveal"><p>其一，城乡居民养老保险与城镇职工养老保险之间的待遇差距；</p><p>同样是基本养老保险，城乡老人和城镇退休职工，拿到手的金额差多少？</p><p>2024年，城镇职工养老保险基金支出67656亿元，离退休人数14739万人。折算下来，月人均支出约3825元。而城乡居民养老保险月人均支出约246元。</p><p>3825和246，15.6倍的差距。两套制度承载着完全不同量级的资源调度能力。城镇职工养老金的池子有单位缴费、有强制参保和连续调待机制，是一个持续蓄水的系统；城乡居民养老金则更多依赖财政补贴和个人自愿缴费，池子深不深，完全取决于地方有没有钱、个人愿不愿意缴。</p><p>更关键的是，这个倍数在十年前是23.1倍。十年间只缩小了7.5倍——照这个速度，城乡养老金体系要拉到同一水位，恐怕还需要很多个十年。</p></div>
