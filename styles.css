@@ -74,7 +74,7 @@ footer{display:flex;justify-content:space-between;gap:30px;padding:38px 5vw;back
 .chapter-cover-copy{display:flex;flex-direction:column;justify-content:center;padding:56px clamp(38px,5vw,78px);background:linear-gradient(145deg,#fffaf5,#f3e7da)}
 .chapter-cover-copy .chapter-no{font-size:clamp(78px,8vw,126px);line-height:.8;margin-bottom:48px;-webkit-text-stroke-color:rgba(179,125,83,.45)}
 .chapter-cover-copy .eyebrow{margin-bottom:16px}
-.chapter-cover-copy h2{font-size:clamp(42px,4.3vw,68px);line-height:1.56;letter-spacing:-.045em;margin:0;text-wrap:balance}
+.chapter-cover-copy h2{font-size:clamp(30px,3.2vw,48px);line-height:1.45;letter-spacing:-.045em;margin:0}
 .chapter-cover-cue{position:absolute;z-index:2;left:50%;bottom:34px;transform:translateX(-50%);color:#66594f}
 .chapter-aging,.chapter-system,.chapter-life,.chapter-response{padding-top:110px}
 
