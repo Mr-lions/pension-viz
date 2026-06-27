@@ -133,6 +133,12 @@
     $$('.support-icons').forEach(el=>{for(let i=0;i<Number(el.dataset.count);i++)el.appendChild(document.createElement('i'))});
   }
 
+  function initHoverToggle(){
+    const tg=$('#hoverCardToggle'),wrap=$('#populationPlotWrap');
+    if(!tg||!wrap)return;
+    const apply=()=>wrap.classList.toggle('card-on',tg.checked);
+    tg.addEventListener('change',apply);apply();
+  }
   function initBurden(){
     const d=D.dependency,slider=$('#burdenSlider');if(!slider)return;
     const person='<svg class="person" viewBox="0 0 24 30"><circle cx="12" cy="6" r="5.4"/><path d="M3 30c0-6.4 4-10.8 9-10.8s9 4.4 9 10.8z"/></svg>';
@@ -383,7 +389,7 @@ function initConsumptionIncome(){
   }
 
   function boot(){
-    initGsapEngine();initReveal();initHeroQuestions();initScrollUI();initPopulation();initPictogram();initBurden();initFlow();initCoverage();initGap();initProvince();initCost();initBasket();initConsumptionIncome();initLabor();initVoiceAnalysis();initTimeline();initPolicyStandard();initCases();initForeign();initSources();initDownloads();initResize();initGsapChartEntrances();
+    initGsapEngine();initReveal();initHeroQuestions();initScrollUI();initPopulation();initHoverToggle();initPictogram();initBurden();initFlow();initCoverage();initGap();initProvince();initCost();initBasket();initConsumptionIncome();initLabor();initVoiceAnalysis();initTimeline();initPolicyStandard();initCases();initForeign();initSources();initDownloads();initResize();initGsapChartEntrances();
   }
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',boot);else boot();
 })();
