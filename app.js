@@ -222,7 +222,7 @@
         animation:true,animationDuration:1300,animationEasing:'cubicOut',animationDelay:i=>Math.min(i*24,620),
         tooltip:{trigger:'item',confine:true,backgroundColor:'#2e2925',borderColor:'#2e2925',padding:[10,14],textStyle:{color:'#fff',fontSize:13},extraCssText:'max-width:260px;white-space:normal;box-shadow:0 12px 30px rgba(0,0,0,.28)',
           formatter:pp=>{const p=byFull[pp.name];if(!p)return `${pp.name}<br/><span style="color:#c5b8ae">暂无数据</span>`;let h=`<b style="font-size:14px">${p.name}</b><br/>基础养老金：<b>${fmt(p.value)}</b> 元/月<br/><span style="color:#ffd7a7">${p.tier}</span>`;if(p.regionNote)h+=`<div style="margin-top:7px;padding-top:6px;border-top:1px solid rgba(255,255,255,.18);color:#dcc9b8;font-size:11.5px;line-height:1.65">⚠ 地区差异提示：${p.regionNote}</div>`;return h}},
-        series:[{type:'map',map:'china',roam:false,zoom:1.18,
+        series:[{type:'map',map:'china',roam:'scale',scaleLimit:{min:1,max:6},layoutCenter:['50%','52%'],layoutSize:'96%',
           label:{show:false},
           emphasis:{label:{show:true,color:'#2e2925',fontSize:12,fontWeight:600},itemStyle:{areaColor:'#ffd7a7'}},
           select:{disabled:true},
