@@ -10,6 +10,8 @@
   const fmt = (v,d=0) => Number(v).toLocaleString('zh-CN',{minimumFractionDigits:d,maximumFractionDigits:d});
   const yuan = (v,d=0) => `${fmt(v,d)}元`;
   const yi = v => `${fmt(v/10000,2)}亿`;
+  const plotFinalStates = new Map();
+  const reducedMotion = () => document.body.classList.contains('motion-off')||matchMedia('(prefers-reduced-motion: reduce)').matches;
   const commonLayout = (extra={}) => ({
     font:{family:font,color:C.body,size:12},paper_bgcolor:'rgba(0,0,0,0)',plot_bgcolor:'rgba(0,0,0,0)',
     margin:{l:58,r:48,t:30,b:55},hoverlabel:{bgcolor:'#2e2925',bordercolor:'#2e2925',font:{family:font,color:'#fff'}},
@@ -20,8 +22,30 @@
   });
   function safePlot(id,traces,layout){
     const el=document.getElementById(id); if(!el || !window.Plotly) return;
-    return Plotly.newPlot(el,traces,layout,plotConfig).then(()=>{charts.set(id,el);return el});
+    const animated=id!=='populationChart'&&window.gsap&&window.ScrollTrigger&&!reducedMotion();
+    const animatable=[];
+    const initial=traces.map((trace,i)=>{
+      if(!animated||!['bar','scatter'].includes(trace.type))return trace;
+      if(trace.type==='scatter'&&!String(trace.mode||'').includes('lines'))return trace;
+      animatable.push(i);
+      if(trace.type==='bar'&&trace.orientation==='h')return{...trace,x:(trace.x||[]).map(()=>0)};
+      return{...trace,y:(trace.y||[]).map(()=>0)};
+    });
+    plotFinalStates.set(id,{traces,layout});
+    return Plotly.newPlot(el,initial,layout,plotConfig).then(()=>{
+      charts.set(id,el);
+      if(animated&&animatable.length){
+        const trigger=el.closest('.chart-card,.dual-view,.income-drill')||el;
+        ScrollTrigger.create({trigger,start:'top 84%',once:true,onEnter:()=>{
+          if(reducedMotion()){Plotly.react(el,traces,layout,plotConfig);return}
+          const data=animatable.map(i=>traces[i].type==='bar'&&traces[i].orientation==='h'?{x:traces[i].x}:{y:traces[i].y});
+          Plotly.animate(el,{data,traces:animatable},{transition:{duration:1250,easing:'cubic-in-out'},frame:{duration:1250,redraw:false}});
+        }});
+      }
+      return el;
+    });
   }
+  function finishPlotAnimations(){plotFinalStates.forEach((state,id)=>{const el=charts.get(id);if(el)Plotly.react(el,state.traces,state.layout,plotConfig)})}
   function toast(msg){const el=$('#toast');el.textContent=msg;el.classList.add('show');clearTimeout(toast.t);toast.t=setTimeout(()=>el.classList.remove('show'),1800)}
   function animateNumber(el,target,duration=1800,decimals=0){
     const start=performance.now();
@@ -52,7 +76,7 @@
     const update=()=>{const h=document.documentElement.scrollHeight-innerHeight;progress.style.width=`${Math.max(0,Math.min(100,scrollY/h*100))}%`;let active=0;sections.forEach((s,i)=>{if(s && s.getBoundingClientRect().top<innerHeight*.48)active=i});dots.forEach((d,i)=>d.classList.toggle('active',i===active))};
     addEventListener('scroll',update,{passive:true});update();
     $('#backTop')?.addEventListener('click',()=>scrollTo({top:0,behavior:'smooth'}));
-    $('#motionToggle')?.addEventListener('click',e=>{document.body.classList.toggle('motion-off');e.currentTarget.textContent=document.body.classList.contains('motion-off')?'静态':'动效';toast(document.body.classList.contains('motion-off')?'已减少页面动效':'已恢复页面动效')});
+    $('#motionToggle')?.addEventListener('click',e=>{document.body.classList.toggle('motion-off');const off=document.body.classList.contains('motion-off');e.currentTarget.textContent=off?'静态':'动效';if(off){window.gsap?.globalTimeline.progress(1);window.ScrollTrigger?.getAll().forEach(x=>x.animation?.progress(1));finishPlotAnimations()}toast(off?'已减少页面动效':'已恢复页面动效')});
   }
 
   function initPopulation(){
@@ -72,13 +96,10 @@
       return el;
     });
     const module=$('.pop-grid .chart-card');
-    module?.classList.add('population-enter');
     if(module&&plotReady){
-      const obs=new IntersectionObserver(entries=>entries.forEach(entry=>{
-        if(!entry.isIntersecting)return;
-        module.classList.add('visible');
+      const play=()=>{
         plotReady.then(el=>{
-          const reduced=document.body.classList.contains('motion-off')||matchMedia('(prefers-reduced-motion: reduce)').matches;
+          const reduced=reducedMotion();
           if(reduced){el.classList.remove('population-line-pending');Plotly.react(el,finalTraces,layout,plotConfig);return}
           Plotly.animate(el,{data:[{y:p.pop60},{y:p.share60}],traces:[0,1]},{transition:{duration:1100,easing:'cubic-in-out'},frame:{duration:1100,redraw:false}}).then(()=>{
             const line=el.querySelector('.scatterlayer .trace.scatter .js-line');
@@ -92,9 +113,9 @@
             }));
           });
         });
-        obs.disconnect();
-      }),{threshold:.28});
-      obs.observe(module);
+      };
+      if(window.ScrollTrigger)ScrollTrigger.create({trigger:module,start:'top 84%',once:true,onEnter:play});
+      else{const obs=new IntersectionObserver(entries=>entries.forEach(entry=>{if(entry.isIntersecting){play();obs.disconnect()}}),{threshold:.28});obs.observe(module)}
     }
     const live=$('#populationLive');
     setTimeout(()=>{const c=$('#populationChart');if(c&&window.Plotly)Plotly.Plots.resize(c)},150);
@@ -157,19 +178,21 @@
   };
   function tierClass(t){return t==='顶尖档'?'tier-top':t==='较高水平档'?'tier-high':t==='全国主流档'?'tier-main':'tier-base'}
   function initProvince(){
-    const wrap=$('#provinceTiles'),sorted=[...D.provinces].sort((a,b)=>b.value-a.value);let selected='上海',tier='全部';
-    D.provinces.forEach(p=>{const b=document.createElement('button');b.className=`province-tile ${tierClass(p.tier)}`;b.dataset.name=p.name;b.dataset.tier=p.tier;b.innerHTML=`<b>${p.name}</b><small>${fmt(p.value)}元</small>`;const pos=tilePos[p.name]||[1,1,1];b.style.gridColumn=`${pos[0]} / span ${pos[2]}`;b.style.gridRow=pos[1];b.addEventListener('click',()=>select(p.name));wrap.appendChild(b)});
+    const sorted=[...D.provinces].sort((a,b)=>b.value-a.value);
+    let selected='上海',tier='全部';
+    const base=Number(D.nationalBaseStandard||163);
+    const tierColor={'顶尖档':'#9f3f2f','较高水平档':'#dc724f','全国主流档':'#d7a15c','国家兜底档':'#b7aa99'};
+    let refresh=()=>{};
     function select(name){
       selected=name;
       const p=D.provinces.find(x=>x.name===name),rank=sorted.findIndex(x=>x.name===name)+1;
-      const base=Number(D.nationalBaseStandard||163),diff=p.value-base;
+      const diff=p.value-base;
       const diffText=diff>0?`+${fmt(diff)}元`:diff<0?`${fmt(diff)}元`:'持平';
       const compareClass=diff>0?'positive':diff<0?'negative':'equal';
       const policies=(p.policyHighlights||[]);
       const policyHtml=policies.length
         ? `<ul>${policies.map(x=>`<li>${x}</li>`).join('')}</ul>`
         : `<p class="policy-empty">所附政策表未单列该地区的补充条款，具体以当地最新政策文件为准。</p>`;
-      $$('.province-tile').forEach(x=>x.classList.toggle('active',x.dataset.name===name));
       $('#provinceDetail').innerHTML=`
         <span class="badge">2025省级参考值 · ${p.tier}</span>
         <h3>${p.name}</h3>
@@ -181,9 +204,35 @@
         </div>
         <div class="rank-line"><span>31省份排名</span><b>第${rank}位</b></div>
         <div class="policy-explain"><h4>地方政策说明</h4>${policyHtml}</div>`;
+      refresh();
     }
-    function filter(){const q=$('#provinceSearch').value.trim();$$('.province-tile').forEach(x=>{const hide=(tier!=='全部'&&x.dataset.tier!==tier)||(q&&!x.dataset.name.includes(q));x.classList.toggle('hidden',hide)});if(q){const p=D.provinces.find(x=>x.name.includes(q));if(p)select(p.name)}}
-    $$('.tier-legend button').forEach(btn=>btn.addEventListener('click',()=>{$$('.tier-legend button').forEach(b=>b.classList.remove('active'));btn.classList.add('active');tier=btn.dataset.tier;filter()}));$('#provinceSearch').addEventListener('input',filter);select(selected);
+    $$('.tier-legend button').forEach(btn=>btn.addEventListener('click',()=>{$$('.tier-legend button').forEach(b=>b.classList.remove('active'));btn.classList.add('active');tier=btn.dataset.tier;refresh()}));
+    $('#provinceSearch').addEventListener('input',()=>{const q=$('#provinceSearch').value.trim();if(q){const p=D.provinces.find(x=>x.name.includes(q));if(p){select(p.name);return}}refresh()});
+    const el=$('#provinceMap'),geo=window.CHINA_GEO;
+    if(!el||!window.echarts||!geo){select(selected);return}
+    const chart=echarts.init(el);
+    {
+      echarts.registerMap('china',geo);
+      const byFull={};geo.features.forEach(f=>{const n=f.properties.name,p=D.provinces.find(x=>n.startsWith(x.name));if(p)byFull[n]=p});
+      function dataArr(){return geo.features.map(f=>{const n=f.properties.name,p=byFull[n];
+        if(!p)return{name:n,value:NaN,itemStyle:{areaColor:'#e9e0d6',borderColor:'#fff',borderWidth:.6}};
+        const dim=(tier!=='全部'&&p.tier!==tier),sel=(p.name===selected);
+        return{name:n,value:p.value,itemStyle:{areaColor:dim?'#e4ddd4':tierColor[p.tier],opacity:dim?.55:1,borderColor:sel?'#2e2925':'#fff',borderWidth:sel?2.4:.6}}})}
+      chart.setOption({
+        animation:true,animationDuration:1300,animationEasing:'cubicOut',animationDelay:i=>Math.min(i*24,620),
+        tooltip:{trigger:'item',confine:true,backgroundColor:'#2e2925',borderColor:'#2e2925',padding:[10,14],textStyle:{color:'#fff',fontSize:13},extraCssText:'max-width:260px;white-space:normal;box-shadow:0 12px 30px rgba(0,0,0,.28)',
+          formatter:pp=>{const p=byFull[pp.name];if(!p)return `${pp.name}<br/><span style="color:#c5b8ae">暂无数据</span>`;let h=`<b style="font-size:14px">${p.name}</b><br/>基础养老金：<b>${fmt(p.value)}</b> 元/月<br/><span style="color:#ffd7a7">${p.tier}</span>`;if(p.regionNote)h+=`<div style="margin-top:7px;padding-top:6px;border-top:1px solid rgba(255,255,255,.18);color:#dcc9b8;font-size:11.5px;line-height:1.65">⚠ 地区差异提示：${p.regionNote}</div>`;return h}},
+        series:[{type:'map',map:'china',roam:false,zoom:1.18,
+          label:{show:false},
+          emphasis:{label:{show:true,color:'#2e2925',fontSize:12,fontWeight:600},itemStyle:{areaColor:'#ffd7a7'}},
+          select:{disabled:true},
+          data:dataArr()}]
+      });
+      refresh=()=>chart.setOption({series:[{data:dataArr()}]});
+      chart.on('click',pp=>{const p=byFull[pp.name];if(p)select(p.name)});
+      addEventListener('resize',()=>chart.resize());
+      select(selected);
+    }
   }
 
   function initCost(){
@@ -301,8 +350,40 @@ function initConsumptionIncome(){
   }
   function initResize(){let t;addEventListener('resize',()=>{clearTimeout(t);t=setTimeout(()=>charts.forEach(el=>Plotly.Plots.resize(el)),150)})}
 
+  function initGsapEngine(){
+    if(!window.gsap||!window.ScrollTrigger)return false;
+    gsap.registerPlugin(ScrollTrigger);
+    return true;
+  }
+  function initGsapChartEntrances(){
+    if(!window.gsap||!window.ScrollTrigger)return;
+    const modules=new Set();
+    $$('.plot').forEach(el=>{const module=el.closest('.chart-card,.dual-view,.income-drill');if(module)modules.add(module)});
+    ['.province-module','.pictogram-wrap','.burden-card','.reservoir-panel','.pension-flow','.calculator-card','.basket-module','.voice-analysis'].forEach(selector=>$$(selector).forEach(el=>modules.add(el)));
+    const effects=[
+      {x:-100,y:0,rotationY:-7,scale:.98},
+      {x:100,y:0,rotationY:7,scale:.98},
+      {x:0,y:74,rotationX:7,scale:.96},
+      {x:-65,y:45,rotation:-1.5,scale:.97},
+      {x:65,y:45,rotation:1.5,scale:.97},
+      {x:0,y:0,rotationX:0,scale:.86}
+    ];
+    const mm=gsap.matchMedia();
+    mm.add({reduce:'(prefers-reduced-motion: reduce)',motion:'(prefers-reduced-motion: no-preference)'},context=>{
+      if(context.conditions.reduce||document.body.classList.contains('motion-off')){gsap.set([...modules],{clearProps:'all'});return}
+      [...modules].forEach((module,i)=>{
+        const effect=effects[i%effects.length];
+        const inner=module.querySelectorAll('.chart-title,.plot,#provinceMap,.interactive-detail,.footnote,.live-card,.province-detail');
+        const tl=gsap.timeline({defaults:{ease:'power3.out'},scrollTrigger:{trigger:module,start:'top 84%',toggleActions:'play none none none',once:true}});
+        tl.fromTo(module,{autoAlpha:0,transformPerspective:900,transformOrigin:'50% 55%',...effect},{autoAlpha:1,x:0,y:0,rotation:0,rotationX:0,rotationY:0,scale:1,duration:.95,clearProps:'transform,opacity,visibility'});
+        if(inner.length)tl.fromTo(inner,{autoAlpha:0,y:22},{autoAlpha:1,y:0,duration:.55,stagger:{each:.055,from:'start'},clearProps:'transform,opacity,visibility'},'-=.48');
+      });
+      requestAnimationFrame(()=>ScrollTrigger.refresh());
+    });
+  }
+
   function boot(){
-    initReveal();initHeroQuestions();initScrollUI();initPopulation();initPictogram();initBurden();initFlow();initCoverage();initGap();initProvince();initCost();initBasket();initConsumptionIncome();initLabor();initVoiceAnalysis();initTimeline();initPolicyStandard();initCases();initForeign();initSources();initDownloads();initResize();
+    initGsapEngine();initReveal();initHeroQuestions();initScrollUI();initPopulation();initPictogram();initBurden();initFlow();initCoverage();initGap();initProvince();initCost();initBasket();initConsumptionIncome();initLabor();initVoiceAnalysis();initTimeline();initPolicyStandard();initCases();initForeign();initSources();initDownloads();initResize();initGsapChartEntrances();
   }
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',boot);else boot();
 })();
