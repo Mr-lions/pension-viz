@@ -96,7 +96,7 @@
       {type:'bar',name:'基金收入',x:d.years,y:d.income,yaxis:'y2',marker:{color:'rgba(242,190,134,.76)'},hovertemplate:'%{x}年<br>基金收入：%{y:,.0f}亿元<extra></extra>'},
       {type:'bar',name:'基金支出',x:d.years,y:d.expense,yaxis:'y2',marker:{color:'rgba(231,135,104,.75)'},hovertemplate:'%{x}年<br>基金支出：%{y:,.0f}亿元<extra></extra>'}
     ];
-    safePlot('coverageChart',traces,commonLayout({barmode:'group',hovermode:'x unified',yaxis:{...commonLayout().yaxis,title:'人数（万人）',range:[0,60000]},yaxis2:{title:'基金收支（亿元）',overlaying:'y',side:'right',range:[0,9000],showgrid:false},xaxis:{...commonLayout().xaxis,dtick:1}}));
+    safePlot('coverageChart',traces,commonLayout({barmode:'group',hovermode:'x unified',yaxis:{...commonLayout().yaxis,title:{text:'人数（万人）',font:{color:C.muted,size:12}},range:[0,60000],automargin:true},yaxis2:{title:{text:'基金收支（亿元）',font:{color:C.muted,size:12}},overlaying:'y',side:'right',range:[0,9000],showgrid:false,automargin:true,tickfont:{color:C.muted}},xaxis:{...commonLayout().xaxis,dtick:1}}));
     setTimeout(()=>{const c=$('#coverageChart');if(c&&window.Plotly)Plotly.Plots.resize(c)},160);
     const s=$('#coverageSlider');function update(){const i=+s.value,y=d.years[i];$('#coverageYear').textContent=y;$('#insuredKpi').textContent=yi(d.insured[i]);$('#recipientKpi').textContent=yi(d.recipients[i]);$('#benefitKpi').textContent=`${d.benefit[i].toFixed(2)}元`;if(charts.get('coverageChart'))Plotly.relayout('coverageChart',{'shapes':[ {type:'line',x0:y,x1:y,y0:0,y1:1,yref:'paper',line:{color:C.accent,width:2,dash:'dot'}}]})}s.addEventListener('input',update);update();
   }
