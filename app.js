@@ -307,7 +307,19 @@ function initConsumptionIncome(){
       '补充养老保险':'<svg viewBox="0 0 32 32" aria-hidden="true"><path class="fill" d="M4 16a12 12 0 0 1 24 0H4Z"/><path d="M16 5v20c0 3-5 3-5 0"/></svg>',
       '高龄与照护补贴':'<svg viewBox="0 0 32 32" aria-hidden="true"><circle class="fill" cx="12" cy="11" r="5"/><circle class="fill" cx="23" cy="13" r="4"/><path class="fill" d="M3 27c.5-6 3.5-9 9-9s8.5 3 9 9H3Z"/><path class="fill" d="M19 20c5-1 9 2 10 7h-7"/></svg>',
       '社会救助':'<svg viewBox="0 0 32 32" aria-hidden="true"><path class="fill" d="M16 27S5 21 5 13c0-6 8-8 11-2 3-6 11-4 11 2 0 8-11 14-11 14Z"/><path d="M3 27c3-5 6-7 10-8M29 27c-3-5-6-7-10-8"/></svg>',
-      '专项扶助':'<svg viewBox="0 0 32 32" aria-hidden="true"><circle cx="16" cy="13" r="8"/><circle cx="16" cy="13" r="4"/><path d="m10 20-3 9 6-3 3 3 2-8M22 20l3 9-6-3-3 3"/></svg>'
+      '专项扶助':'<svg viewBox="0 0 32 32" aria-hidden="true"><circle cx="16" cy="13" r="8"/><circle cx="16" cy="13" r="4"/><path d="m10 20-3 9 6-3 3 3 2-8M22 20l3 9-6-3-3 3"/></svg>',
+      '务农':'<svg viewBox="0 0 32 32" aria-hidden="true"><path d="M16 28V15"/><path class="fill" d="M16 17C16 10 11 7 5 7c0 7 5 10 11 10Z"/><path class="fill" d="M16 19c0-6 5-9 11-9 0 6-5 9-11 9Z"/></svg>',
+      '务工':'<svg viewBox="0 0 32 32" aria-hidden="true"><path class="fill" d="M5 22a11 11 0 0 1 22 0Z"/><path d="M13 11V8h6v3M3 22h26"/></svg>',
+      '兼职或返聘':'<svg viewBox="0 0 32 32" aria-hidden="true"><path d="M5 12h22v14H5z"/><path d="M12 12V9h8v3M5 18h22"/></svg>',
+      '做生意或自主经营':'<svg viewBox="0 0 32 32" aria-hidden="true"><path class="fill" d="M5 7h22l2 6H3l2-6Z"/><path d="M5 13v14h22V13M13 27v-7h6v7"/></svg>',
+      '房屋出租':'<svg viewBox="0 0 32 32" aria-hidden="true"><path class="fill" d="M16 5 4 15h24L16 5Z"/><path d="M7 15v12h18V15M13 27v-7h6v7"/></svg>',
+      '利息收入':'<svg viewBox="0 0 32 32" aria-hidden="true"><circle cx="16" cy="16" r="11"/><path d="M11 11l5 6 5-6M16 17v6M12 20h8"/></svg>',
+      '土地出租或承包':'<svg viewBox="0 0 32 32" aria-hidden="true"><path class="fill" d="M16 13 4 19l12 6 12-6-12-6Z"/><path d="M4 13l12-6 12 6"/></svg>',
+      '拆迁等财产收入':'<svg viewBox="0 0 32 32" aria-hidden="true"><path d="M6 27V7l11-2v22M17 27V12l9 2v13M3 27h26"/><path d="M10 11h3M10 16h3M10 21h3M21 18h2M21 22h2"/></svg>',
+      '投资理财':'<svg viewBox="0 0 32 32" aria-hidden="true"><path d="M5 5v22h22"/><path d="M9 21l5-5 4 3 7-10"/><path d="M22 9h5v5"/></svg>',
+      '子女及孙辈支持':'<svg viewBox="0 0 32 32" aria-hidden="true"><circle class="fill" cx="11" cy="9" r="4"/><path class="fill" d="M4 27c0-6 3-9 7-9s7 3 7 9H4Z"/><circle class="fill" cx="23" cy="13" r="3"/><path class="fill" d="M18 27c.4-4 2.4-6 5-6s4.6 2 5 6H18Z"/></svg>',
+      '其他亲属支持':'<svg viewBox="0 0 32 32" aria-hidden="true"><circle class="fill" cx="16" cy="10" r="4"/><path class="fill" d="M8 26c0-5 3-8 8-8s8 3 8 8H8Z"/><circle class="fill" cx="6" cy="13" r="3"/><circle class="fill" cx="26" cy="13" r="3"/></svg>',
+      '人情往来收入':'<svg viewBox="0 0 32 32" aria-hidden="true"><path d="M5 13h22v13H5zM5 13v-3h22v3M16 10v16"/><path d="M16 10C14 5 9 6 9 9c0 2 4 1 7 1ZM16 10c2-5 7-4 7-1 0 2-4 1-7 1Z"/></svg>'
     };
     function incomeDetailIcon(name,index){return incomeDetailIcons[name]||String(index+1).padStart(2,'0')}
     const incomePlot=safePlot('ruralIncomeChart',[{type:'pie',labels:s.categories,values:s.rural,hole:.48,sort:false,direction:'clockwise',textinfo:'label+percent',textposition:'inside',insidetextorientation:'horizontal',pull:[.075,0,0,0],marker:{colors:[C.blue,C.red,C.gold,'#9c8a77'],line:{color:'#fff',width:4}},hovertemplate:'%{label}<br>%{value:.1f}%<extra></extra>'}],commonLayout({margin:{l:22,r:22,t:12,b:24},showlegend:false,uniformtext:{minsize:11,mode:'hide'},transition:{duration:360,easing:'cubic-in-out'}}));
