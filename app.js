@@ -11,7 +11,7 @@
   const yuan = (v,d=0) => `${fmt(v,d)}元`;
   const yi = v => `${fmt(v/10000,2)}亿`;
   const plotFinalStates = new Map();
-  const reducedMotion = () => document.body.classList.contains('motion-off')||matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const reducedMotion = () => document.body.classList.contains('motion-off');
   const commonLayout = (extra={}) => ({
     font:{family:font,color:C.body,size:12},paper_bgcolor:'rgba(0,0,0,0)',plot_bgcolor:'rgba(0,0,0,0)',
     margin:{l:58,r:48,t:30,b:55},hoverlabel:{bgcolor:'#2e2925',bordercolor:'#2e2925',font:{family:font,color:'#fff'}},
@@ -63,7 +63,7 @@
     if(!questions)return;
     questions.classList.add('questions-enter');
     const show=()=>questions.classList.add('visible');
-    if(matchMedia('(prefers-reduced-motion: reduce)').matches){show();return}
+    if(reducedMotion()){show();return}
     const obs=new IntersectionObserver(entries=>entries.forEach(entry=>{
       if(!entry.isIntersecting)return;
       show();
@@ -407,7 +407,7 @@ function initConsumptionIncome(){
   }
 
   function initSources(){
-    const dialog=$('#sourceDialog');const open=()=>dialog.showModal();$('#sourceOpen').addEventListener('click',open);$('#sourceOpenFooter').addEventListener('click',open);dialog.addEventListener('click',e=>{if(e.target===dialog)dialog.close()});$('#sourceList').innerHTML=D.sources.map(x=>x.url?`<a href="${x.url}" target="_blank" rel="noopener"><b>${x.name}</b><span>${x.org} ↗</span></a>`:`<div><b>${x.name}</b><span>${x.org}</span></div>`).join('');
+    const dialog=$('#sourceDialog');if(!dialog)return;const open=()=>dialog.showModal();$('#sourceOpen')?.addEventListener('click',open);$('#sourceOpenFooter')?.addEventListener('click',open);dialog.addEventListener('click',e=>{if(e.target===dialog)dialog.close()});const list=$('#sourceList');if(list)list.innerHTML=D.sources.map(x=>x.url?`<a href="${x.url}" target="_blank" rel="noopener"><b>${x.name}</b><span>${x.org} ↗</span></a>`:`<div><b>${x.name}</b><span>${x.org}</span></div>`).join('');
   }
   function initDownloads(){
     $$('.download-chart').forEach(btn=>btn.addEventListener('click',()=>{const id=btn.dataset.chart,el=charts.get(id);if(!el)return toast('图表尚未加载完成');Plotly.downloadImage(el,{format:'png',filename:`农村养老金-${id}`,width:1400,height:800,scale:1}).then(()=>toast('已生成图表图片'))}));
@@ -423,7 +423,14 @@ function initConsumptionIncome(){
     if(!window.gsap||!window.ScrollTrigger)return;
     const modules=new Set();
     $$('.plot').forEach(el=>{const module=el.closest('.chart-card,.dual-view,.income-drill');if(module)modules.add(module)});
-    ['.province-module','.pictogram-wrap','.burden-card','.reservoir-panel','.pension-flow','.calculator-card','.basket-module','.voice-analysis'].forEach(selector=>$$(selector).forEach(el=>modules.add(el)));
+    [
+      '.chart-card','.lead-card','.people-card','.burden-card','.reservoir-panel',
+      '.pension-flow','.calculator-card','.province-module','.province-detail',
+      '.dual-view','.basket-module','.basket-item','.income-drill','.income-detail',
+      '.message-module','.message-card','.timeline-shell','.timeline-card',
+      '.cases-module','.case-card','.foreign-card','.voice-analysis',
+      '.voice-detail-card','.policy-standard-card','.policy-standard-copy'
+    ].forEach(selector=>$$(selector).forEach(el=>modules.add(el)));
     const effects=[
       {x:-100,y:0,rotationY:-7,scale:.98},
       {x:100,y:0,rotationY:7,scale:.98},
@@ -433,8 +440,8 @@ function initConsumptionIncome(){
       {x:0,y:0,rotationX:0,scale:.86}
     ];
     const mm=gsap.matchMedia();
-    mm.add({reduce:'(prefers-reduced-motion: reduce)',motion:'(prefers-reduced-motion: no-preference)'},context=>{
-      if(context.conditions.reduce||document.body.classList.contains('motion-off')){gsap.set([...modules],{clearProps:'all'});return}
+    mm.add('(min-width: 0px)',()=>{
+      if(document.body.classList.contains('motion-off')){gsap.set([...modules],{clearProps:'all'});return}
       [...modules].forEach((module,i)=>{
         const effect=effects[i%effects.length];
         const inner=module.querySelectorAll('.chart-title,.plot,#provinceMap,.interactive-detail,.footnote,.live-card,.province-detail');

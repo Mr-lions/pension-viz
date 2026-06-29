@@ -28,7 +28,6 @@ footer{display:flex;justify-content:space-between;gap:30px;padding:38px 5vw;back
 .reveal{opacity:0;transform:translateY(34px);transition:opacity .8s ease,transform .8s ease}.reveal.visible{opacity:1;transform:none}.motion-off *{animation-duration:.001ms!important;animation-iteration-count:1!important;transition-duration:.001ms!important;scroll-behavior:auto!important}
 @media(max-width:980px){.desktop-nav{display:none}.chapter-dots{display:none}.story-grid,.story-grid.wide,.story-grid.reverse,.calculator-card,.province-content,.two-chart-grid,.income-drill{grid-template-columns:1fr}.sticky-copy{position:static}.story-grid.wide .story-copy{order:0}.story-grid.wide .chart-card{order:1}.calculator-card{gap:20px}.province-detail{min-height:0;max-height:none}.foreign-grid{grid-template-columns:repeat(2,1fr)}.message-grid{grid-template-columns:repeat(2,1fr)}.pictogram-grid{grid-template-columns:1fr}.vs-gap{padding:15px}.flow-columns{grid-template-columns:1fr}.case-card{grid-template-columns:1fr}.case-card.reverse .case-copy,.case-card.reverse .case-media{order:initial}.reservoirs{grid-template-columns:1fr 110px 1fr;gap:12px}.province-tiles{grid-template-columns:repeat(7,1fr);grid-template-rows:repeat(8,65px)}.hero-kpis{grid-template-columns:1fr 1fr 1fr}}
 @media(max-width:680px){.topbar{padding:0 14px}.brand span:last-child{display:none}.chapter{padding:90px 15px}.chapter-head{grid-template-columns:1fr;margin-bottom:60px}.chapter-no{font-size:50px}.hero{padding-left:16px;padding-right:16px}.hero h1{font-size:52px}.hero-deck{font-size:16px}.hero-kpis{grid-template-columns:1fr}.hero-kpi{justify-content:flex-start}.story-grid{gap:24px;margin-bottom:65px}.chart-card,.pension-flow,.calculator-card,.reservoir-panel,.province-module,.dual-view,.basket-module,.income-drill,.message-module,.timeline-shell,.cases-module{border-radius:20px;padding:17px}.plot{height:360px}.large-chart .plot{height:420px}.pictogram-grid{gap:13px}.people-dots{gap:4px}.formula-banner{flex-wrap:wrap;font-size:14px}.flow-nodes{flex-wrap:wrap}.basket-module{grid-template-columns:1fr}.basket-items{grid-template-columns:1fr}.message-grid{grid-template-columns:1fr}.method-grid{grid-template-columns:1fr}.foreign-grid{grid-template-columns:1fr}.province-toolbar{flex-direction:column}.province-toolbar input{width:100%}.province-tiles{grid-template-columns:repeat(5,1fr);grid-template-rows:auto;min-height:0}.province-tile{min-height:55px;grid-area:auto!important}.reservoirs{grid-template-columns:1fr 75px 1fr}.tank{height:250px}.ratio-badge{width:80px;height:80px}.ratio-badge strong{font-size:27px}.timeline:before{left:68px}.timeline-item{grid-template-columns:52px 1fr;gap:34px}.timeline-card:before{left:-25px}.timeline-year{font-size:18px}.ending-question{font-size:17px}footer{flex-direction:column}.chapter-head h2{font-size:38px}.support-visual{flex-direction:column}.arrow-down{transform:rotate(90deg)}}
-@media(prefers-reduced-motion:reduce){*{animation-duration:.001ms!important;animation-iteration-count:1!important;scroll-behavior:auto!important}.reveal{opacity:1;transform:none}.hero-intro .hero-questions.questions-enter p{opacity:1;transform:none;filter:none;transition:none}}
 
 
 /* 完整文案与政策文本增强 */
@@ -68,7 +67,6 @@ footer{display:flex;justify-content:space-between;gap:30px;padding:38px 5vw;back
 .pop-grid .chart-card.population-enter{opacity:0;transform:translate3d(96px,0,0);filter:blur(3px);transition:opacity .75s cubic-bezier(.22,1,.36,1),transform .92s cubic-bezier(.22,1,.36,1),filter .7s ease;will-change:opacity,transform,filter}
 .pop-grid .chart-card.population-enter.visible{opacity:1;transform:translate3d(0,0,0);filter:blur(0)}
 #populationChart.population-line-pending .scatterlayer .trace.scatter{opacity:0}
-@media(prefers-reduced-motion:reduce){.pop-grid .chart-card.population-enter{opacity:1;transform:none;filter:none;transition:none}}
 .hero-intro .hero-kpis{max-width:none;margin:0 0 38px;border-top:1px solid #dfcdbd;border-bottom:1px solid #dfcdbd;gap:0}
 .hero-intro .hero-kpi{justify-content:flex-start;padding:24px 28px;background:transparent;border:0;border-radius:0}
 .hero-intro .hero-kpi+ .hero-kpi{border-left:1px solid #dfcdbd}
@@ -198,7 +196,6 @@ footer{display:flex;justify-content:space-between;gap:30px;padding:38px 5vw;back
   0%,100%{box-shadow:0 0 0 2px rgba(253,130,0,.5),0 0 0 7px rgba(253,130,0,.1)}
   50%{box-shadow:0 0 0 3px rgba(253,130,0,.3),0 0 0 14px rgba(253,130,0,0)}
 }
-@media(prefers-reduced-motion:reduce){.timeline-item.node-key .timeline-card:before{animation:none}}
 
 /* 政策总结与提标图表左右布局 */
 .policy-standard-split{width:min(1200px,92vw);margin:0 auto 110px;display:grid;grid-template-columns:minmax(280px,1fr) minmax(0,1fr);gap:48px;align-items:stretch}
